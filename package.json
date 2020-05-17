@@ -1,0 +1,22 @@
+{
+  "name": "tiktok-jkt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "fs": "0.0.1-security",
+    "knex": "^0.21.1",
+    "path": "^0.12.7",
+    "pg": "^8.2.1",
+    "tiktok-api": "^0.4.1",
+    "twit": "^2.2.11",
+    "twitter-video": "^2.0.0"
+  }
+}
