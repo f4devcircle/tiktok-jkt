@@ -8,11 +8,11 @@ const path = require('path');
 const headers = require('./headers');
 
 const upsert = async (params) => {
-  const {table, object, constraint} = params;
+  const { table, object, constraint } = params;
   const insert = knex(table).insert(object);
   const update = knex.queryBuilder().update(object);
-	const query = await knex.raw(`? ON CONFLICT ${constraint} DO ? returning *`, [insert, update]);
-	return query;
+  const query = await knex.raw(`? ON CONFLICT ${constraint} DO ? returning *`, [insert, update]);
+  return query;
 };
 
 const Twitter = new twit({
@@ -35,12 +35,11 @@ const getPosts = async () => {
   const members = await knex('members');
 
   const asyncX = members.map(async each => {
-    const response = await axios.get(each.url, { headers })
+    const response = await axios.get(each.url, { headers });
 
     if (!response.data.items) return false;
 
-    const data = transformer(response.data.items);
-    data.reverse();
+    const data = (transformer(response.data.items)).reverse();
 
     const asyncY = data.map(async each => {
       await upsert({
@@ -57,8 +56,8 @@ const getPosts = async () => {
 };
 
 const downloadFile = async (url, fileName) => {  
-	const filePath = path.resolve('tmp', fileName);
-  const writer = fs.createWriteStream(filePath)
+  const filePath = path.resolve('tmp', fileName);
+  const writer = fs.createWriteStream(filePath);
 
   const response = await axios({
     url,
@@ -69,20 +68,20 @@ const downloadFile = async (url, fileName) => {
   response.data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-    writer.on('finish', resolve)
-    writer.on('error', reject)
+    writer.on('finish', resolve);
+    writer.on('error', reject);
   });
 };
 
 const postMediaChunked = async (filePath) => new Promise((resolve, reject) => {
-	Twitter.postMediaChunked({ file_path: filePath }, function (err, data) {
-		if (err) reject(err)
-		else {
+  Twitter.postMediaChunked({ file_path: filePath }, function (err, data) {
+    if (err) reject(err);
+    else {
       setTimeout(async () => {
-				resolve(data.media_id_string)
-			}, 5000);
-		}
-	});
+        resolve(data.media_id_string);
+      }, 5000);
+    }
+  });
 });
 
 const publish = async () => {
